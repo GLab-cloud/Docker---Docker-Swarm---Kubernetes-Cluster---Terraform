@@ -1,3 +1,73 @@
+# ====================================================================
+# DOCKER & CONTAINERS
+# ====================================================================
+# Ignore container and engine logs
+*.log
+docker-compose.override.yml
+
+# Ignore local data directories mounted from containers
+.docker-data/
+data/
+db_data/
+
+
+# ====================================================================
+# KUBERNETES & HELM
+# ====================================================================
+# CRITICAL: Never commit Kubeconfig files containing cluster access credentials
+kubeconfig
+.kubeconfig
+*kubeconfig*
+credentials.json
+
+# Helm: Ignore packaged charts (.tgz) and temporary dependent chart directories
+*.tgz
+/charts/charts/
+/charts/*/charts/
+charts/debian/
+.helm/
+
+
+# ====================================================================
+# TERRAFORM
+# ====================================================================
+# Ignore the local plugins and providers directory
+.terraform/
+
+# Ignore execution log files
+.terraform.lock.hcl
+
+# CRITICAL: Never commit state files containing sensitive infrastructure data
+*.tfstate
+*.tfstate.*
+
+# Ignore crash logs
+crash.log
+crash.*.log
+
+# Ignore variable files containing passwords, tokens, or secrets
+*.tfvars
+*.tfvars.json
+
+# Ignore configuration overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+
+# ====================================================================
+# ENVIRONMENT & SECRETS
+# ====================================================================
+# Ignore all local environment variable files
+.env
+.env.local
+.env.*.local
+*.env
+.secret
+*.pem
+*.key
+
 # If you prefer the allow list template instead of the deny list, see community template:
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
