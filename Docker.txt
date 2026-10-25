@@ -1,0 +1,9 @@
+docker pull ubuntu:16.04
+docker images
+docker image rm 1f
+docker pull centos
+docker search centos
+docker run -it ubntu:latest
+root@fe8ea82fa7cd:/# cat /etc/*release
+root@fe8ea82fa7cd:/# exit
+docker ps -a;  docker start; docker stop; docker run -it --name "ABC" -h ubuntu1 ubuntu:latest
