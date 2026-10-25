@@ -6,4 +6,4 @@ docker search centos
 docker run -it ubntu:latest
 root@fe8ea82fa7cd:/# cat /etc/*release
 root@fe8ea82fa7cd:/# exit
-docker ps -a;  docker start; docker stop; docker run -it --name "ABC" -h ubuntu1 ubuntu:latest
+docker ps -a;  docker start; docker stop; docker run -it --name "ABC" -h ubuntu1 ubuntu:latest; docker exec -it 9035 /bin/sh; docker exec, exit, Ctrl + D
