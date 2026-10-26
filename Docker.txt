@@ -16,3 +16,9 @@ docker rm <id or name of container>
 docker exec -it bash
 root@debian1:/# apt install iputils-ping
 root@debian1:/# apt install htop
+root@debian1:/# apt install vim
+docker commit debian debian-vim:version1
+docker save --output myimage.tar debian-vim:version1
+docker image rm debian-vim:version1 -f
+docker load -i myimage.tar
+docker tag 802396c552e1 debian:version2
