@@ -22,3 +22,6 @@ docker save --output myimage.tar debian-vim:version1
 docker image rm debian-vim:version1 -f
 docker load -i myimage.tar
 docker tag 802396c552e1 debian:version2
+//Docker volume - sharing data Host and Container
+docker run -it -v /workspaces/data:/home/data debian-vim:version1
+docker run -it -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/data:/home/data debian-vim:version1
