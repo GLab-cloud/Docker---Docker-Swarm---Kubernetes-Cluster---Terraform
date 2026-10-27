@@ -25,3 +25,7 @@ docker tag 802396c552e1 debian:version2
 //Docker volume - sharing data Host and Container
 docker run -it -v /workspaces/data:/home/data debian-vim:version1
 docker run -it -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/data:/home/data debian-vim:version1
+root@88934f9e57f9:/home/data# vi 1.txt
+root@88934f9e57f9:/home/data# echo "Hello" > 2.txt
+//Docker volume - sharing data between Containers
+docker run -it --name debian1 --volumes-from 236968caf8c8 debian-vim:version1
