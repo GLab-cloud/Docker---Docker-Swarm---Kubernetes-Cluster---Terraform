@@ -1,0 +1,7 @@
+{
+  "name": "My Codespace Project",
+  "postStartCommand": [
+    "docker run -d --name C1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/data:/home/data debian-vim:version1",
+    "docker run -it --name C2 --volumes-from 236968caf8c8 debian-vim:version1"
+  ]
+}
