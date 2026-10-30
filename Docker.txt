@@ -32,3 +32,12 @@ docker run -it --name debian1 --volumes-from 236968caf8c8 debian-vim:version1
 // create 2 containers
 docker run -it --name C1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/data:/home/data debian-vim:version1
 docker run -it --name C2 --volumes-from 236968caf8c8 debian-vim:version1
+//create volume
+docker volume create D1
+docker volume ls
+docker inspect D1
+docker volume rm D1
+//create contianer and mount volume 
+docker run -it --name CD1 --mount source=D1,target=/home/data/disk1 debian-vim:version1
+docker run -it --name CD2 --mount source=D2,target=/home/data/disk2 debian-vim:version1
+
