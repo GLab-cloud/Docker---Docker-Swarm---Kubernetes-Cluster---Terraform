@@ -65,6 +65,9 @@ vi index.html
 :wq
 kill 10 && httpd -h /var/www
 wget -O - 172.17.0.5
+// list all applets funcs for container - debian
+ls /bin /sbin /usr/bin /usr/sbin
+dpkg -l
 
 
 

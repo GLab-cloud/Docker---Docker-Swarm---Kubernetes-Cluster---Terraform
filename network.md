@@ -1,6 +1,12 @@
 # Docker `bridge` network
 
-Result summary from `docker network inspect bridge` (captured 2026-10-31):
+Command used to inspect the network:
+
+```sh
+docker network inspect bridge
+```
+
+The following diagram and properties summarize the inspection result:
 
 ```text
 +---------------------------- Docker host -----------------------------+
@@ -33,14 +39,18 @@ Result summary from `docker network inspect bridge` (captured 2026-10-31):
 | Created | `2026-10-31T09:02:18.14463279Z` |
 | Driver / scope | `bridge` / `local` |
 | IPv4 / IPv6 | Enabled / disabled |
+| IPAM driver | `default` |
 | Subnet | `172.17.0.0/16` |
 | Gateway | `172.17.0.1` |
 | Bridge interface | `docker0` |
 | Internal / attachable / ingress | `false` / `false` / `false` |
+| Config only | `false` |
+| Config from | None |
 | MTU | `1500` |
 | Inter-container communication | Enabled |
 | IP masquerading | Enabled |
 | Default host binding IPv4 | `0.0.0.0` |
+| IPAM addresses in use / dynamically available | `7` / `65,529` |
 
 ## Attached containers
 
