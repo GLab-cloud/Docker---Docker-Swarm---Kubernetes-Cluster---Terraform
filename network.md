@@ -6,8 +6,7 @@ Command used:
 docker network inspect $(docker network ls -q)
 ```
 
-## Network topology
-
+##  --network mynetwork
 ```text
 +-------------------------------- Docker host --------------------------------+
 |                                                                            |
@@ -16,8 +15,8 @@ docker network inspect $(docker network ls -q)
 |  gateway: 172.17.0.1                   gateway: 172.18.0.1                  |
 |  +-----------------------------+       +-----------------------------+     |
 |  | Container1  172.17.0.2      |       | Container4  172.18.0.2      |     |
-|  | Container2  172.17.0.3      |       +-----------------------------+     |
-|  | Container3  172.17.0.4      |                                           |
+|  | Container2  172.17.0.3      |       | Container5  172.18.0.3      |     |
+|  | Container3  172.17.0.4      |       +-----------------------------+     |
 |  +-----------------------------+                                           |
 |                                                                            |
 |  host (host driver)                    none (null driver)                  |
@@ -154,6 +153,13 @@ Output:
         "Options": {},
         "Labels": {},
         "Containers": {
+            "074f1afb2b0c5f823eaf6009c28d55a4ee425ac7ab814470479044f386eb4563": {
+                "Name": "Container5",
+                "EndpointID": "7e9080a41f8d8b841daeafaaf5f35679c592e01ed660352fb3984e1eeabd93fd",
+                "MacAddress": "aa:24:a2:76:e4:08",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
             "6a7001fadd66c784cc5fef2c85628e97d7f83ac827437783a8a526baf94f07d0": {
                 "Name": "Container4",
                 "EndpointID": "6a5da363e5b206c98ba9df98b49752071833661f750694f0c7bd9b3875447b8c",
@@ -166,8 +172,8 @@ Output:
             "IPAM": {
                 "Subnets": {
                     "172.18.0.0/16": {
-                        "IPsInUse": 4,
-                        "DynamicIPsAvailable": 65532
+                        "IPsInUse": 5,
+                        "DynamicIPsAvailable": 65531
                     }
                 }
             }
