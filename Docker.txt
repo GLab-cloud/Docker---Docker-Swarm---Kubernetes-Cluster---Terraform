@@ -72,6 +72,11 @@ dpkg -l
 // mapping port 8888:80
 docker run -it --name Container3 -p 8888:80 busybox
 https://squalid-orb-5rg9596795wcpx7w-8888.app.github.dev/
+//create mynetwork
+docker network create --driver bridge mynetwork
+docker network ls
+docker run -it --name Container4 --network mynetwork busybox
+
 
 
 
