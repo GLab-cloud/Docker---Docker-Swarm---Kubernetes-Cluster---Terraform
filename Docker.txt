@@ -79,5 +79,6 @@ docker run -it --name Container4 --network mynetwork busybox
 
 docker network inspect $(docker network ls -q)
 docker network inspect bridge mynetwork
+docker network connect bridge Container5
 
 

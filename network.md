@@ -6,7 +6,7 @@ Command used:
 docker network inspect $(docker network ls -q)
 ```
 
-##  --network mynetwork
+## Network topology
 ```text
 +-------------------------------- Docker host --------------------------------+
 |                                                                            |
@@ -17,6 +17,8 @@ docker network inspect $(docker network ls -q)
 |  | Container1  172.17.0.2      |       | Container4  172.18.0.2      |     |
 |  | Container2  172.17.0.3      |       | Container5  172.18.0.3      |     |
 |  | Container3  172.17.0.4      |       +-----------------------------+     |
+|  | Container4  172.17.0.5      |                                           |
+|  | Container5  172.17.0.6      |                                           |
 |  +-----------------------------+                                           |
 |                                                                            |
 |  host (host driver)                    none (null driver)                  |
@@ -32,8 +34,8 @@ Output:
 [
     {
         "Name": "bridge",
-        "Id": "dcbab8f13f67d8b11d3728f51e077876ae00b57dc1630e8184e83e4dabfb33e8",
-        "Created": "2026-11-05T03:24:45.670155775Z",
+        "Id": "e23694b71ba3515bdc1e27b043aee5ee09e5dbeb1a0a6b3a92a0307e446c7363",
+        "Created": "2026-11-05T05:48:52.474935895Z",
         "Scope": "local",
         "Driver": "bridge",
         "EnableIPv4": true,
@@ -65,25 +67,39 @@ Output:
         },
         "Labels": {},
         "Containers": {
+            "074f1afb2b0c5f823eaf6009c28d55a4ee425ac7ab814470479044f386eb4563": {
+                "Name": "Container5",
+                "EndpointID": "b709aebc4bffcfc44433b8d3ce3c63c155f09260036dbbd5b2a7c5fb4b534302",
+                "MacAddress": "26:8a:71:0b:fa:76",
+                "IPv4Address": "172.17.0.6/16",
+                "IPv6Address": ""
+            },
             "0ae5aa9cc50ac40fd2d028ac007588a7687e03500322fcc5a0707452d46c1b8d": {
                 "Name": "Container1",
-                "EndpointID": "dc6e6531fb8fffa798a8792dd9adac8bda3c71bd48c38ac39a21a192f6b1f34f",
-                "MacAddress": "d6:ad:a8:4b:ad:40",
+                "EndpointID": "98adaa4fa709d9a9833a5f9af92a444763de4dd3571ea12fcb83a51eba352911",
+                "MacAddress": "de:92:e6:89:f4:53",
                 "IPv4Address": "172.17.0.2/16",
                 "IPv6Address": ""
             },
             "219af539340b6c086913afb245ad2d54eaadada8d6e8d7c3fa234a8dd3da16b2": {
                 "Name": "Container3",
-                "EndpointID": "008657f315162392ebbbb70b802b1bbda2722424cff3578844484e53403f4f54",
-                "MacAddress": "d2:e8:1d:b1:91:26",
+                "EndpointID": "61ffc1eb6b2c66b8d306d200506221597a7c6c403c5377600811b5d9d93db475",
+                "MacAddress": "82:4f:34:a0:6a:4e",
                 "IPv4Address": "172.17.0.4/16",
                 "IPv6Address": ""
             },
             "391640018d00e04d8f15fdbd763485d1b8b5a465fc7288f456cfd59e300eb507": {
                 "Name": "Container2",
-                "EndpointID": "187784444c0fa4172756e8dd474503125eea31f5eb793bc8601ee4667b08cd17",
-                "MacAddress": "9e:52:bd:c3:79:8d",
+                "EndpointID": "e3875604013988a81272b36b99068b01ff6103a02523368b9c00742bd3aadd77",
+                "MacAddress": "72:34:f7:10:72:9b",
                 "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "6a7001fadd66c784cc5fef2c85628e97d7f83ac827437783a8a526baf94f07d0": {
+                "Name": "Container4",
+                "EndpointID": "905f1254b25cda6740e3bb535039bb1c03043b124791a9ab4695dddcd16756c7",
+                "MacAddress": "be:02:84:c0:2d:33",
+                "IPv4Address": "172.17.0.5/16",
                 "IPv6Address": ""
             }
         },
@@ -91,8 +107,8 @@ Output:
             "IPAM": {
                 "Subnets": {
                     "172.17.0.0/16": {
-                        "IPsInUse": 6,
-                        "DynamicIPsAvailable": 65530
+                        "IPsInUse": 8,
+                        "DynamicIPsAvailable": 65528
                     }
                 }
             }
@@ -155,15 +171,15 @@ Output:
         "Containers": {
             "074f1afb2b0c5f823eaf6009c28d55a4ee425ac7ab814470479044f386eb4563": {
                 "Name": "Container5",
-                "EndpointID": "7e9080a41f8d8b841daeafaaf5f35679c592e01ed660352fb3984e1eeabd93fd",
-                "MacAddress": "aa:24:a2:76:e4:08",
+                "EndpointID": "01da879f4d9384c1ed281eb46e270890c1343906365605c6cfaa009887ba385a",
+                "MacAddress": "da:e3:f7:62:65:5f",
                 "IPv4Address": "172.18.0.3/16",
                 "IPv6Address": ""
             },
             "6a7001fadd66c784cc5fef2c85628e97d7f83ac827437783a8a526baf94f07d0": {
                 "Name": "Container4",
-                "EndpointID": "6a5da363e5b206c98ba9df98b49752071833661f750694f0c7bd9b3875447b8c",
-                "MacAddress": "fa:83:2d:9e:1b:fa",
+                "EndpointID": "c0fb1fd7f4bb69f92b51fe12de2406bb06a15f71487dffe1dc56a94b5a723e39",
+                "MacAddress": "c2:63:20:5e:0a:7e",
                 "IPv4Address": "172.18.0.2/16",
                 "IPv6Address": ""
             }
