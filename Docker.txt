@@ -86,5 +86,7 @@ docker pull php:7.3-fpm
 docker network create --driver bridge www-net
 docker run -d --name c-php -h php -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ --network www-net php:7.3-fpm
 docker exec -it c-php bash
+php test.php
+docker ps --format '{{.ID}}\t{{.Names}}' | while read id name; do echo -e "$id\t$name\t$(docker inspect --format '{{.Config.Hostname}}' $id)"; done
 
 
