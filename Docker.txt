@@ -89,4 +89,10 @@ docker exec -it c-php bash
 php test.php
 docker ps --format '{{.ID}}\t{{.Names}}' | while read id name; do echo -e "$id\t$name\t$(docker inspect --format '{{.Config.Hostname}}' $id)"; done
 
+// Run Container Apache Httpd
+docker pull httpd
+Using default tag: latest
+docker run --rm -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/:/home/mycode httpd cp /usr/local/apache2/conf/httpd.conf /home/mycode/
+
+
 
