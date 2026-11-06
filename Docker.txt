@@ -81,4 +81,10 @@ docker network inspect $(docker network ls -q)
 docker network inspect bridge mynetwork
 docker network connect bridge Container5
 
+//Run Container PHP, PHP-FPM
+docker pull php:7.3-fpm
+docker network create --driver bridge www-net
+docker run -d --name c-php -h php -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ --network www-net php:7.3-fpm
+docker exec -it c-php bash
+
 
