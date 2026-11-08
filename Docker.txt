@@ -94,6 +94,6 @@ docker pull httpd
 Using default tag: latest
 docker run --rm -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/:/home/mycode httpd cp /usr/local/apache2/conf/httpd.conf /home/mycode/
 sudo chown $(whoami):$(whoami) mycode/httpd.conf
-// 
+docker run --network www-net --name c-httpd -p 9999:80 -p 443:443 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd
 
 
