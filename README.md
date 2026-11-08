@@ -47,3 +47,8 @@ kubeconfig files, Terraform state and `.tfvars` files, and environment or
 credential files. Keep credentials and generated infrastructure state out of
 version control. Review the ignore rules before adding files that are intended
 to be shared with the repository.
+## Why isolate the PHP-FPM Container?
+
+- Microservices Architecture: The Web Server (Apache/Nginx) handles incoming HTTP requests and serves static files (HTML, CSS, JS, images). When it encounters a .php file, it forwards (proxies) the request to the PHP-FPM container for processing.
+- Performance Optimization: PHP-FPM (FastCGI Process Manager) excels at managing PHP processes. It handles high traffic much better than the old-school method of embedding PHP directly inside Apache (mod_php).
+- Scalability: If your application slows down due to heavy PHP logic, you can easily scale up by spinning up multiple PHP containers to share the load, without needing to duplicate the Apache web server.
