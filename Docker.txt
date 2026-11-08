@@ -96,4 +96,24 @@ docker run --rm -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terr
 sudo chown $(whoami):$(whoami) mycode/httpd.conf
 docker run --network www-net --name c-httpd -p 9999:80 -p 443:443 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd
 
+// fig bugs
+docker exec -it c-php sed -i 's/listen = 127.0.0.1:9000/listen = [::]:9000/g' /usr/local/etc/php-fpm.d/www.conf
+docker restart c-php
+docker restart c-httpd
+docker rm -f c-httpd
+// Pass Gateway, Port Forwarding, Production
+docker rm -f c-php c-httpd
+docker run -d --name c-php -h php \
+  --cap-add=NET_ADMIN \
+  -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ \
+  --network www-net php:7.3-fpm
+<FilesMatch \.php$>
+    SetHandler "proxy:fcgi://c-php:9000"
+</FilesMatch>
+docker run -d --network www-net --name c-httpd \
+  --cap-add=NET_ADMIN \
+  -p 9999:80 -p 443:443 \
+  -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode \
+  -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/httpd.conf:/usr/local/apache2/conf/httpd.conf \
+  httpd
 
