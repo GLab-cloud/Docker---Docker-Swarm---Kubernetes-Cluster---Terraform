@@ -8,11 +8,12 @@ Docker Swarm, Kubernetes, and Terraform material.
 The repository includes:
 
 - [`Docker.txt`](./Docker.txt), a command log covering images, containers,
-  volumes, bridge networking, and PHP/Apache examples.
+  volumes, bridge networking, and Apache/PHP-FPM examples.
 - [`network.md`](./network.md), a Docker network inspection snapshot and
   topology diagram.
 - `data/`, sample files used for volume-mount examples.
-- `mycode/`, sample web content and an Apache configuration.
+- `mycode/`, sample HTML/PHP content and an Apache configuration for the
+  PHP-FPM example.
 - `myimage.tar`, a saved Docker image used by the image save/load examples.
 - `.devcontainer/`, the development-container configuration.
 - `.gitignore`, rules for local Docker data, Kubernetes credentials,
@@ -20,6 +21,15 @@ The repository includes:
 
 There are no Dockerfiles, Compose files, Swarm stacks, Kubernetes manifests,
 Helm charts, or Terraform configurations in the repository yet.
+
+## Apache and PHP-FPM example
+
+The Docker notes describe running Apache HTTP Server and PHP-FPM as separate
+containers on a shared Docker network. Apache serves the web content and
+forwards PHP requests to PHP-FPM, which manages PHP worker processes
+independently. Keeping the services separate lets them be configured and
+scaled independently. See [`Docker.txt`](./Docker.txt) for the commands and
+[`mycode/`](./mycode) for the sample application and Apache configuration.
 
 ## Docker network example
 
@@ -47,8 +57,3 @@ kubeconfig files, Terraform state and `.tfvars` files, and environment or
 credential files. Keep credentials and generated infrastructure state out of
 version control. Review the ignore rules before adding files that are intended
 to be shared with the repository.
-## Why isolate the PHP-FPM Container?
-
-- Microservices Architecture: The Web Server (Apache/Nginx) handles incoming HTTP requests and serves static files (HTML, CSS, JS, images). When it encounters a .php file, it forwards (proxies) the request to the PHP-FPM container for processing.
-- Performance Optimization: PHP-FPM (FastCGI Process Manager) excels at managing PHP processes. It handles high traffic much better than the old-school method of embedding PHP directly inside Apache (mod_php).
-- Scalability: If your application slows down due to heavy PHP logic, you can easily scale up by spinning up multiple PHP containers to share the load, without needing to duplicate the Apache web server.
