@@ -122,10 +122,12 @@ echo $var1 $var2
 // Run Container MySql Db
 docker pull mysql
 docker images
-- port:3304
+- port:3306
 - file config: /etc/mysql/my.cnf
     [mysqld] // old systems can connect to this latest version of mysql
     default-authentication-plugin=mysql_native_password
 - root: MYSQL_ROOT_PASSWORD
 - Databases: /var/lib/mysql
 docker run --rm -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode mysql cp /etc/my.cnf /home/mycode/
+sudo chown -R $USER:$USER /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf
+docker run -e MYSQL_ROOT_PASSWORD=abc1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf:/etc/my.cnf -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/db:/var/lib/mysql --name c-mysql mysql                  
