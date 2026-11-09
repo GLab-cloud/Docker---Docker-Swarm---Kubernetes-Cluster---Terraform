@@ -137,3 +137,8 @@ mysql -u root -pabc1
 show databases;    
 use mysql;
 show tables;
+CREATE USER 'testuser'@'%' IDENTIFIED BY 'testpass';
+create database db_testdb;
+GRANT ALL PRIVILEGES ON db_testdb.* TO 'testuser'@'%';
+mysql> flush privileges;
+select User from user;
