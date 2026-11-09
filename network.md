@@ -12,21 +12,31 @@ docker network inspect $(docker network ls -q)
 +------------------------------ Docker host -------------------------------+
 |                                                                          |
 |  bridge (bridge; docker0)                                                 |
-|    subnet: 172.17.0.0/16   gateway: 172.17.0.1   containers: none         |
+|    subnet: 172.17.0.0/16   gateway: 172.17.0.1                          |
+|    +----------------------+                                               |
+|    | c-mysql  172.17.0.2  |                                               |
+|    +----------------------+                                               |
 |                                                                          |
 |  mynetwork (bridge)                                                       |
-|    subnet: 172.18.0.0/16   gateway: 172.18.0.1   containers: none         |
+|    subnet: 172.18.0.0/16   gateway: 172.18.0.1   no attached containers   |
 |                                                                          |
 |  www-net (bridge)                                                         |
-|    subnet: 172.19.0.0/16   gateway: 172.19.0.1   containers: none         |
+|    subnet: 172.19.0.0/16   gateway: 172.19.0.1                          |
+|    +----------------------+   +------------------------+                 |
+|    | c-php   172.19.0.2   |   | c-httpd  172.19.0.3   |                 |
+|    +----------------------+   +------------------------+                 |
+|    | c-mysql 172.19.0.4   |                                               |
+|    +----------------------+                                               |
 |                                                                          |
 |  host (host driver; no attached containers)                               |
 |  none (null driver; no attached containers)                               |
 +--------------------------------------------------------------------------+
 ```
 
-This snapshot shows five networks, with no containers attached to any of them.
-Addresses and network IDs may differ in other Docker environments.
+This snapshot shows five networks. `c-mysql` is attached to both `bridge` and
+`www-net`; `c-php` and `c-httpd` are also attached to `www-net`. The other
+networks have no attached containers. Addresses and network IDs may differ in
+other Docker environments.
 
 ## Inspection output
 
@@ -34,8 +44,8 @@ Addresses and network IDs may differ in other Docker environments.
 [
     {
         "Name": "bridge",
-        "Id": "c23a2fe97361ea14c7cf948ad7ec3a60272e710e6e4eb03290b9854924254289",
-        "Created": "2026-11-08T09:19:46.778117164Z",
+        "Id": "71efcbd41c2a377b0adb118665a6abe2c9ab78557443c2e5d6b80655da310200",
+        "Created": "2026-11-09T08:02:08.606621678Z",
         "Scope": "local",
         "Driver": "bridge",
         "EnableIPv4": true,
@@ -66,13 +76,21 @@ Addresses and network IDs may differ in other Docker environments.
             "com.docker.network.driver.mtu": "1500"
         },
         "Labels": {},
-        "Containers": {},
+        "Containers": {
+            "3285a5c3dcc33f1f10fdf611a5cbc363774023c814761baa01603383f396df6e": {
+                "Name": "c-mysql",
+                "EndpointID": "881705b2562faa81125965923984eb40c4d1868988d7cff31fb232f1661f5afd",
+                "MacAddress": "fa:4c:fc:7a:35:ae",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        },
         "Status": {
             "IPAM": {
                 "Subnets": {
                     "172.17.0.0/16": {
-                        "IPsInUse": 3,
-                        "DynamicIPsAvailable": 65533
+                        "IPsInUse": 4,
+                        "DynamicIPsAvailable": 65532
                     }
                 }
             }
@@ -198,13 +216,35 @@ Addresses and network IDs may differ in other Docker environments.
         "ConfigOnly": false,
         "Options": {},
         "Labels": {},
-        "Containers": {},
+        "Containers": {
+            "3285a5c3dcc33f1f10fdf611a5cbc363774023c814761baa01603383f396df6e": {
+                "Name": "c-mysql",
+                "EndpointID": "5b2a0927215a71b412b64a2b3146e0dc05b6904091e161e30210bf9dece827be",
+                "MacAddress": "1e:58:b3:f4:84:f6",
+                "IPv4Address": "172.19.0.4/16",
+                "IPv6Address": ""
+            },
+            "d71601b9417e665c936fda1f70c4c48b33f5655759c789e3b3e2ae42663d4d88": {
+                "Name": "c-php",
+                "EndpointID": "82e06ef724fa0e69b05c9c747e160f7e8aa231003dbdc330cf8225197b3b1a52",
+                "MacAddress": "12:53:a2:f8:11:65",
+                "IPv4Address": "172.19.0.2/16",
+                "IPv6Address": ""
+            },
+            "dade4bc45d436af6e299ae95808a7fa5e0eae2716d003ad7b229a84373064e73": {
+                "Name": "c-httpd",
+                "EndpointID": "e44c9244d3c9749efe634fd181784f0b00600edc9eab1c02341f3eea27c98e52",
+                "MacAddress": "e6:c2:dd:af:97:45",
+                "IPv4Address": "172.19.0.3/16",
+                "IPv6Address": ""
+            }
+        },
         "Status": {
             "IPAM": {
                 "Subnets": {
                     "172.19.0.0/16": {
-                        "IPsInUse": 3,
-                        "DynamicIPsAvailable": 65533
+                        "IPsInUse": 6,
+                        "DynamicIPsAvailable": 65530
                     }
                 }
             }

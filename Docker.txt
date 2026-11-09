@@ -142,3 +142,4 @@ create database db_testdb;
 GRANT ALL PRIVILEGES ON db_testdb.* TO 'testuser'@'%';
 mysql> flush privileges;
 select User from user;
+docker network connect www-net c-mysql
