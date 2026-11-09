@@ -116,6 +116,15 @@ docker run -d --network www-net --name c-httpd \
   -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode \
   -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/httpd.conf:/usr/local/apache2/conf/httpd.conf \
   httpd
-  // Environment variable configuration 
+// Environment variable configuration 
 docker run -it --rm -e var1=VALUE1 -e var2=VALUE2 busybox
 echo $var1 $var2
+// Run Container MySql Db
+docker pull mysql
+docker images
+- port:3304
+- file config: /etc/mysql/my.cnf
+    [mysqld] // old systems can connect to this latest version of mysql
+    default-authentication-plugin=mysql_native_password
+- root: MYSQL_ROOT_PASSWORD
+- Databases: /var/lib/mysql
