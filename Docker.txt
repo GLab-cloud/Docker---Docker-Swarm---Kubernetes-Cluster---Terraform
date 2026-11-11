@@ -142,4 +142,10 @@ create database db_testdb;
 GRANT ALL PRIVILEGES ON db_testdb.* TO 'testuser'@'%';
 mysql> flush privileges;
 select User from user;
-docker network connect www-net c-mysql
+// run Wordpress on Docker
+docker start c-php c-httpd c-mysql
+docker exec -it c-httpd bash
+root@dade4bc45d43:/usr/local/apache2# cd /home/mycode/www
+root@dade4bc45d43:/home/mycode/www# ls
+docker exec -it c-php docker-php-ext-install mysqli pdo pdo_mysql
+docker restart c-php
