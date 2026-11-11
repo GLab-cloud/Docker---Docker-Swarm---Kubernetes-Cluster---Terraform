@@ -1,0 +1,57 @@
+services:
+  c-mysql:
+    image: mysql:8.0.33
+    container_name: c-mysql
+    hostname: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: abc1
+      MYSQL_DATABASE: db_testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./my.cnf:/etc/my.cnf
+      - ./db:/var/lib/mysql
+    networks:
+      - www-net
+
+  c-php:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM php:7.3-fpm
+        RUN docker-php-ext-install mysqli pdo pdo_mysql
+    container_name: c-php
+    hostname: php
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/home/mycode/
+    depends_on:
+      - c-mysql
+    networks:
+      - www-net
+
+  c-httpd:
+    image: httpd
+    container_name: c-httpd
+    hostname: httpd
+    restart: always
+    ports:
+      - "9999:80"
+      - "443:443"
+    volumes:
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - .:/home/mycode/
+    depends_on:
+      - c-php
+    networks:
+      - www-net
+
+networks:
+  www-net:
+    driver: bridge

@@ -142,6 +142,7 @@ create database db_testdb;
 GRANT ALL PRIVILEGES ON db_testdb.* TO 'testuser'@'%';
 mysql> flush privileges;
 select User from user;
+docker network connect www-net c-mysql
 // run Wordpress on Docker
 docker start c-php c-httpd c-mysql
 docker exec -it c-httpd bash
@@ -149,3 +150,8 @@ root@dade4bc45d43:/usr/local/apache2# cd /home/mycode/www
 root@dade4bc45d43:/home/mycode/www# ls
 docker exec -it c-php docker-php-ext-install mysqli pdo pdo_mysql
 docker restart c-php
+docker rm -f c-php
+docker run -d --name c-php -h php -p 9000:9000 \
+  --cap-add=NET_ADMIN \
+  -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ \
+  --network www-net php:7.3-fpm ocker run -p 3306:3306 --network www-net -e MYSQL_ROOT_PASSWORD=abc1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf:/etc/my.cnf -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/db:/var/lib/mysql --name c-mysql mysql:8.0   
