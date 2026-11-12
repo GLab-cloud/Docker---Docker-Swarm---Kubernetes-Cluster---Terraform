@@ -23,7 +23,8 @@ services:
       context: .
       dockerfile_inline: |
         FROM php:7.3-fpm
-        RUN docker-php-ext-install mysqli pdo pdo_mysql
+        RUN sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/etc/php-fpm.d/www.conf \
+            && docker-php-ext-install mysqli pdo pdo_mysql
     container_name: c-php
     hostname: php
     restart: always
@@ -54,4 +55,4 @@ services:
 
 networks:
   www-net:
-    driver: bridge
+    external: true

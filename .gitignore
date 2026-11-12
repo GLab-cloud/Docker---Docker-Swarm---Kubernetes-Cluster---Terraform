@@ -9,13 +9,8 @@ docker-compose.override.yml
 .docker-data/
 data/
 db_data/
-mycode/db
+mycode/db 
 mycode/www
-
-
-
-
-
 # ====================================================================
 # KUBERNETES & HELM
 # ====================================================================

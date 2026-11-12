@@ -83,8 +83,8 @@ docker network connect bridge Container5
 
 //Run Container PHP, PHP-FPM
 docker pull php:7.3-fpm
-docker network create --driver bridge www-net
-docker run -d --name c-php -h php -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ --network www-net php:7.3-fpm
+docker network create --driver bridge --subnet 172.20.0.0/16 --gateway 172.20.0.1 www-net
+docker run -d --name c-php -h php -p 9000:9000 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ --network www-net php:7.3-fpm
 docker exec -it c-php bash
 php test.php
 docker ps --format '{{.ID}}\t{{.Names}}' | while read id name; do echo -e "$id\t$name\t$(docker inspect --format '{{.Config.Hostname}}' $id)"; done
@@ -97,18 +97,20 @@ sudo chown $(whoami):$(whoami) mycode/httpd.conf
 docker run --network www-net --name c-httpd -p 9999:80 -p 443:443 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd
 
 // fig bugs
-docker exec -it c-php sed -i 's/listen = 127.0.0.1:9000/listen = [::]:9000/g' /usr/local/etc/php-fpm.d/www.conf
+docker exec -it c-php sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/etc/php-fpm.d/www.conf
 docker restart c-php
 docker restart c-httpd
 docker rm -f c-httpd
 // Pass Gateway, Port Forwarding, Production
 docker rm -f c-php c-httpd
 docker run -d --name c-php -h php \
+  -p 9000:9000 \
   --cap-add=NET_ADMIN \
+  --entrypoint sh \
   -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ \
-  --network www-net php:7.3-fpm
+  --network www-net php:7.3-fpm -c "sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/etc/php-fpm.d/www.conf && exec php-fpm"
 <FilesMatch \.php$>
-    SetHandler "proxy:fcgi://c-php:9000"
+    SetHandler "proxy:fcgi://172.20.0.1:9000"
 </FilesMatch>
 docker run -d --network www-net --name c-httpd \
   --cap-add=NET_ADMIN \
@@ -131,6 +133,8 @@ docker images
 docker run --rm -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode mysql cp /etc/my.cnf /home/mycode/
 sudo chown -R $USER:$USER /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf
 docker run -e MYSQL_ROOT_PASSWORD=abc1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf:/etc/my.cnf -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/db:/var/lib/mysql --name c-mysql mysql   
+// WordPress database endpoint when using the bridge gateway
+define( 'DB_HOST', '172.20.0.1:3306' );
 // connect mysql server
 docker exec -it c-mysql bash  
 mysql -u root -pabc1     
@@ -155,3 +159,4 @@ docker run -d --name c-php -h php -p 9000:9000 \
   --cap-add=NET_ADMIN \
   -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ \
   --network www-net php:7.3-fpm ocker run -p 3306:3306 --network www-net -e MYSQL_ROOT_PASSWORD=abc1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf:/etc/my.cnf -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/db:/var/lib/mysql --name c-mysql mysql:8.0   
+docker compose down && docker compose up -d --build

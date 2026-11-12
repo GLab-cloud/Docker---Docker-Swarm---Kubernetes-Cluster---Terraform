@@ -19,25 +19,27 @@ The repository includes:
 - `.gitignore`, rules for local Docker data, Kubernetes credentials,
   Terraform state and variable files, environment files, and build artifacts.
 
-There are no Dockerfiles, Compose files, Swarm stacks, Kubernetes manifests,
-Helm charts, or Terraform configurations in the repository yet.
+The MySQL/PHP-FPM/Apache example is defined in
+[`mycode/docker-compose.yaml`](./mycode/docker-compose.yaml). The repository
+does not yet include Swarm stacks, Kubernetes manifests, Helm charts, or
+Terraform configurations.
 
 ## Apache and PHP-FPM example
 
-The Docker notes describe running Apache HTTP Server and PHP-FPM as separate
-containers on a shared Docker network. Apache serves the web content and
-forwards PHP requests to PHP-FPM, which manages PHP worker processes
-independently. Keeping the services separate lets them be configured and
-scaled independently. See [`Docker.txt`](./Docker.txt) for the commands and
-[`mycode/`](./mycode) for the sample application and Apache configuration.
+The Compose stack runs MySQL, PHP-FPM, and Apache on the `www-net` bridge
+network. In this Codespaces setup, Apache and WordPress use the bridge gateway
+(`172.20.0.1`) with the published PHP-FPM and MySQL ports; PHP-FPM listens on
+all container interfaces. The gateway is pinned in Compose so these routes
+remain consistent when the stack is recreated. See [`Docker.txt`](./Docker.txt)
+for command examples and [`mycode/`](./mycode) for the stack configuration.
 
 ## Docker network example
 
-The latest documented inspection shows four Docker networks: the default
-`bridge`, `host`, `mynetwork`, and `none`. `Container1` through `Container5`
-are attached to the default bridge network; `Container4` and `Container5` are
-also attached to `mynetwork`. See [`network.md`](./network.md) for the network
-addresses and the full inspection output.
+The current Compose network is `mycode_www-net` (the Compose logical network is
+`www-net`), with gateway `172.20.0.1`. MySQL, PHP-FPM, and Apache are attached
+to it; Apache reaches PHP-FPM and WordPress reaches MySQL through their
+published ports on that gateway. See [`network.md`](./network.md) for the
+current topology and the earlier inspection snapshot.
 
 The network details in `network.md` are a snapshot of the Docker environment
 where the command was run. Network IDs, container attachments, and addresses

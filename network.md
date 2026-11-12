@@ -1,12 +1,37 @@
 # Docker network inspection
 
+## Current Compose gateway
+
+The current Compose stack uses the `mycode_www-net` bridge network (logical
+Compose name `www-net`) with gateway `172.20.0.1`. The three application
+containers are attached to this network:
+
+```text
+mycode_www-net (172.20.0.0/16; gateway 172.20.0.1)
+  c-mysql  172.20.0.2   published port 3306
+  c-php    172.20.0.3   published port 9000; PHP-FPM listens on all interfaces
+  c-httpd  172.20.0.4   host ports 9999->80 and 443->443
+
+Apache -> 172.20.0.1:9000 -> PHP-FPM
+WordPress -> 172.20.0.1:3306 -> MySQL
+```
+
+Compose pins the subnet and gateway in `mycode/docker-compose.yaml`. The
+published ports are required for these gateway routes.
+
+## Earlier Docker network inspection
+
 Command used:
 
 ```sh
 docker network inspect $(docker network ls -q)
 ```
 
-## Network topology
+The topology and inspection output below are an earlier snapshot (gateway
+`172.19.0.1`), retained for historical reference; they do not describe the
+current Compose network.
+
+### Earlier network topology
 
 ```text
 +------------------------------ Docker host -------------------------------+
