@@ -160,3 +160,10 @@ docker run -d --name c-php -h php -p 9000:9000 \
   -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode:/home/mycode/ \
   --network www-net php:7.3-fpm ocker run -p 3306:3306 --network www-net -e MYSQL_ROOT_PASSWORD=abc1 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/my.cnf:/etc/my.cnf -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/db:/var/lib/mysql --name c-mysql mysql:8.0   
 docker compose down && docker compose up -d --build
+//images - container inspect
+docker images
+docker image history name/id
+docker inspect c-php
+docker diff c-httpd
+docker logs --tail 10 c-httpd
+docker logs -f c-php
