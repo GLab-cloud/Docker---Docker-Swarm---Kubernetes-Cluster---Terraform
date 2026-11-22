@@ -179,6 +179,12 @@ yum update -y
 yum install httpd httpd-tools -y
 [root@2128585afede /]# sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 [root@2128585afede /]# sed -i 's|#baseurl=http://centos.org|baseurl=http://centos.org|g' /etc/yum.repos.d/CentOS-*
-
-
+//ubuntu LTS
+docker run -it --name ubuntu ubuntu:22.04
+apt update && apt upgrade -y
+apt install apache2 apache2-utils -y
+apt install vim htop -y
+web dir:/var/www/html
+file conf: /etc/apache2/apache2.conf
+foreground service: service apache2 start or /usr/sbin/apache2ctl -D FOREGROUND
 
