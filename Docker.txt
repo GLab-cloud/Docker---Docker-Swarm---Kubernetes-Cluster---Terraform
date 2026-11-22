@@ -167,3 +167,13 @@ docker inspect c-php
 docker diff c-httpd
 docker logs --tail 10 c-httpd
 docker logs -f c-php
+docker stats c-php c-mysql c-httpd
+docker stats 
+//dockerfile - build image
+//Create new image myimage:v1 from base image centos:latest
+-install: httpd, htop,vim
+-copy: index.html to /var/www/html
+-run in background: /usr/sbin.http when container build from this image started running
+
+
+
