@@ -199,3 +199,7 @@ docker run --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUND
 docker rmi myubuntuimage:v1
 docker cp /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage/index.html $(docker ps -qf "publish=9876"):/var/www/html/index.html
 docker commit $(docker ps -qf "publish=9876") myubuntuimage:v1
+docker run -d --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUND
+//Dockerfile
+docker build -t myubuntuimage:v3 /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage
+docker run -d --rm -p 8888:80 myubuntuimage:v3
