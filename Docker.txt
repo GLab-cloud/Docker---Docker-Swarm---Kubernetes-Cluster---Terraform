@@ -186,5 +186,12 @@ apt install apache2 apache2-utils -y
 apt install vim htop -y
 web dir:/var/www/html
 file conf: /etc/apache2/apache2.conf
-foreground service: service apache2 start or /usr/sbin/apache2ctl -D FOREGROUND
+foreground service: service apache2 start or /usr/sbin/apache2ctl -D 
+docker rm -f ubuntu
+docker run -it --name ubuntu -p 8080:80 ubuntu:22.04
+docker run -it --name ubuntu -p 8080:80 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage:/var/www/html ubuntu:22.04
+//commit ubuntu image:v1
+docker commit ubuntu myubuntuimage:v1
+docker run --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUND
+docker rmi myubuntuimage:v1
 
