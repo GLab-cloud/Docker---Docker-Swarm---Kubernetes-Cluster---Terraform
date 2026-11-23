@@ -191,7 +191,11 @@ docker rm -f ubuntu
 docker run -it --name ubuntu -p 8080:80 ubuntu:22.04
 docker run -it --name ubuntu -p 8080:80 -v /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage:/var/www/html ubuntu:22.04
 //commit ubuntu image:v1
+docker cp /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage/test.html ubuntu:/var/www/html/index.html
+
 docker commit ubuntu myubuntuimage:v1
 docker run --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUND
-docker rmi myubuntuimage:v1
 
+docker rmi myubuntuimage:v1
+docker cp /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage/index.html $(docker ps -qf "publish=9876"):/var/www/html/index.html
+docker commit $(docker ps -qf "publish=9876") myubuntuimage:v1
