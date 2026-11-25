@@ -1,0 +1,16 @@
+# FROM centos:latest 
+# CentOS Linux (End of Life) 
+FROM rockylinux:9
+
+RUN dnf update -y && \
+    dnf install -y epel-release && \
+    dnf install -y httpd vim htop net-tools wget && \
+    dnf clean all
+
+WORKDIR /var/www/html
+EXPOSE 80
+ADD ./test.html /var/www/html/index.html
+
+ENTRYPOINT ["httpd"]
+CMD ["-D", "FOREGROUND"]
+

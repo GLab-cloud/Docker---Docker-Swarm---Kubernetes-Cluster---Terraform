@@ -202,4 +202,5 @@ docker commit $(docker ps -qf "publish=9876") myubuntuimage:v1
 docker run -d --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUND
 //Dockerfile
 docker build -t myubuntuimage:v3 /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage
-docker run -d --rm -p 8888:80 myubuntuimage:v3
+//Build centos image - rockylinux:9
+docker build -t mycentosimage:v1 -f Dockerfilecentos .
