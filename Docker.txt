@@ -204,3 +204,6 @@ docker run -d --rm -p 9876:80 myubuntuimage:v1 /usr/sbin/apache2ctl -D FOREGROUN
 docker build -t myubuntuimage:v3 /workspaces/Docker---Docker-Swarm---Kubernetes-Cluster---Terraform/mycode/myimage
 //Build centos image - rockylinux:9
 docker build -t mycentosimage:v1 -f Dockerfilecentos .
+# Build image production - auto restart
+docker build -t myweb-prod:v1 -f Dockerfile.prod .
+docker run -d --name webserver-prod --restart unless-stopped -p 80:8080 myweb-prod:v1

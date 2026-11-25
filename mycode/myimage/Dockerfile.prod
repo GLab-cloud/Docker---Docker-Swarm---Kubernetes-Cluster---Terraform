@@ -1,0 +1,32 @@
+# Use minimal image to reduce size by >50% and eliminate unnecessary tools
+FROM rockylinux:9-minimal
+
+# Install only httpd; omit vim, htop, wget, and curl to minimize attack surface
+RUN microdnf update -y && \
+    microdnf install -y httpd && \
+    microdnf clean all && \
+    rm -rf /var/cache/yum
+
+# Configure Apache to listen on unprivileged port 8080 (required for non-root users)
+# Redirect access and error logs to stdout/stderr following Docker best practices
+RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf && \
+    ln -sf /dev/stdout /var/log/httpd/access_log && \
+    ln -sf /dev/stderr /var/log/httpd/error_log && \
+    chown -R apache:apache /var/www/html /var/log/httpd /run/httpd
+
+WORKDIR /var/www/html
+
+# Copy web source code and grant ownership directly to the apache user
+COPY --chown=apache:apache ./test.html /var/www/html/index.html
+
+# Switch to non-root user to enhance container security
+USER apache
+
+EXPOSE 8080
+
+# Enable automated container health monitoring
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/ || exit 1
+
+ENTRYPOINT ["httpd"]
+CMD ["-D", "FOREGROUND"]
