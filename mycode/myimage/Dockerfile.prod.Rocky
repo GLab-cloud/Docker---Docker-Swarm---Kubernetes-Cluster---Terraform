@@ -1,0 +1,48 @@
+# Use official Rocky Linux 9 minimal image for a smaller attack surface
+FROM rockylinux/rockylinux:9-minimal
+
+# Set environment variables
+ENV APACHE_RUN_USER=apache \
+    APACHE_RUN_GROUP=apache \
+    APACHE_LOG_DIR=/var/log/httpd \
+    APACHE_DOCUMENT_ROOT=/var/www/html
+
+# Install Apache, SSL module, and clean up package cache in one layer
+RUN microdnf update -y && \
+    microdnf install -y httpd mod_ssl && \
+    microdnf clean all && \
+    rm -rf /var/cache/yum
+
+# Configure Apache for production & containerization:
+# 1. Redirect logs to stdout/stderr so `docker logs` captures them
+# 2. Hide Apache version & OS info (ServerTokens / ServerSignature)
+# 3. Disable default welcome page and directory listing
+RUN ln -sf /dev/stdout /var/log/httpd/access_log && \
+    ln -sf /dev/stderr /var/log/httpd/error_log && \
+    rm -f /etc/httpd/conf.d/welcome.conf && \
+    sed -i 's/Options Indexes FollowSymLinks/Options -Indexes +FollowSymLinks/' /etc/httpd/conf/httpd.conf && \
+    echo "ServerTokens Prod" >> /etc/httpd/conf/httpd.conf && \
+    echo "ServerSignature Off" >> /etc/httpd/conf/httpd.conf && \
+    echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf
+
+# Optional: Copy custom virtual host or security configuration
+# COPY ./docker/apache/vhost.conf /etc/httpd/conf.d/vhost.conf
+
+# Set working directory and copy application source files
+WORKDIR ${APACHE_DOCUMENT_ROOT}
+COPY --chown=apache:apache ./src/ ${APACHE_DOCUMENT_ROOT}/
+
+# Ensure proper permissions for non-root execution (e.g., port 8080)
+# Note: Running on port 80 requires root to bind initially (Apache drops privileges to 'apache' user automatically).
+# If enforcing strict non-root container user, change Listen 80 to Listen 8080 in httpd.conf and uncomment USER below.
+RUN chown -R apache:apache /var/www/html /run/httpd /var/log/httpd /etc/httpd
+
+# Expose standard HTTP/HTTPS ports
+EXPOSE 80 443
+
+# Container healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Run Apache in the foreground
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
