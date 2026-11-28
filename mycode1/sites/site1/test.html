@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connection Information</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f4f6f9; color: #333; padding: 30px; }
+        .card { max-width: 700px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        h2 { margin-top: 0; color: #1a73e8; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; }
+        th { width: 35%; color: #555; background: #fafafa; }
+        .badge-ok { background: #e6f4ea; color: #137333; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+        .badge-err { background: #fce8e6; color: #c5221f; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+        .btn { margin-top: 18px; padding: 8px 16px; background: #1a73e8; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+        .btn:hover { background: #1557b0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>System & Database Information</h2>
+        <div id="content">Loading data from MySQL...</div>
+        <button class="btn" onclick="loadDbInfo()">Refresh Data</button>
+    </div>
+
+    <script>
+        // Fetch database metadata from the PHP backend endpoint
+        async function loadDbInfo() {
+            const container = document.getElementById('content');
+            container.innerHTML = 'Connecting to MySQL...';
+            try {
+                const res = await fetch('api_db.php');
+                const data = await res.json();
+
+                // Display error badge if connection fails
+                if (data.status !== 'success') {
+                    container.innerHTML = `<p><span class="badge-err">Connection Error</span> ${data.message}</p>`;
+                    return;
+                }
+
+                // Render table list or fallback message if database is empty
+                let tableListHtml = data.tables.length === 0
+                    ? '<em>No tables found in this database.</em>'
+                    : data.tables.map(t => `<li><strong>${t.name}</strong> (${t.engine} - ${t.rows} rows)</li>`).join('');
+
+                // Populate system and database details table
+                container.innerHTML = `
+                    <table>
+                        <tr><th>Status</th><td><span class="badge-ok">Connected Successfully</span></td></tr>
+                        <tr><th>Host (Gateway)</th><td>${data.host}</td></tr>
+                        <tr><th>Database Name</th><td><strong>${data.database}</strong></td></tr>
+                        <tr><th>Username</th><td>${data.user}</td></tr>
+                        <tr><th>MySQL Version</th><td>${data.mysql_version}</td></tr>
+                        <tr><th>PHP Version</th><td>${data.php_version}</td></tr>
+                        <tr><th>Charset</th><td>${data.charset}</td></tr>
+                        <tr><th>Tables (${data.tables.length})</th><td><ul style="margin:0;padding-left:18px;">${tableListHtml}</ul></td></tr>
+                    </table>
+                `;
+            } catch (err) {
+                container.innerHTML = `<p><span class="badge-err">API Request Error</span> ${err.message}</p>`;
+            }
+        }
+
+        // Load database information on initial page load
+        loadDbInfo();
+    </script>
+</body>
+</html>
